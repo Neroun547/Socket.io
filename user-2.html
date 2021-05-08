@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script>
+        let socket = io();
+
+socket.on('message', (message) => { 
+  console.log('Message from server: ', message);
+  const li = document.createElement('li');
+  li.innerHTML = message;
+  document.querySelector('.container').appendChild(li);
+})
+
+socket.on('allmessage', (message) => {
+  console.log(message);
+  for(let i = 0; i < message.length; i++){
+    const li = document.createElement('li');
+    li.innerHTML = message[i].message;
+    document.querySelector('.container').appendChild(li); 
+  }
+}) 
+
+</script>
+</head>
+<body>
+    <h1>I am user 2 ....</h1>
+    <form class="form">
+        <input placeholder="message" class="message-input"/>
+        <button type="submit">Send message</button>
+      </form>
+      <div class="container">
+
+      </div>
+    <script>
+        const form = document.querySelector('.form');
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            const message = document.querySelector('.message-input');
+            socket.emit('message', message.value);
+            message.value = "";
+        }
+    </script>
+</body>
+</html>
